@@ -11,3 +11,4 @@ data
 website/static/images
 website/static/test
 etl-node/node_modules
+__pycache__
