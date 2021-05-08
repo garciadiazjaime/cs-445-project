@@ -19,8 +19,8 @@ async function getImagesFromFolder(path) {
 }
 
 async function moveFile(category, image) {
-  const oldPath = `${directory}/posts/${image}`
-  const newPath = `${directory}/${category}/${image}`
+  const oldPath = `${directory}/images/posts/${image}`
+  const newPath = `${directory}/images/${category}/${image}`
 
   await rename(oldPath, newPath)
 }
