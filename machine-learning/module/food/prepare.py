@@ -2,9 +2,12 @@ import cv2
 import os
 import numpy as np
 
-folders = ['drink', 'pizza'] #, 'dessert', 'sandwich', 'seafood', 'tacos']
+folders = ['tacos', 'pizza'] #, 'dessert', 'sandwich', 'seafood', 'drink']
 img_size = 224
 dir_path = os.path.dirname(os.path.realpath(__file__))
+
+def get_categories():
+  return folders
 
 def get_data(data_dir):
   images = []
@@ -33,15 +36,21 @@ def main():
   train_images = train_images / 255.0
   test_images = test_images / 255.0
 
+  folder = get_images_folder()
+
   # Save test images
-  np.save("./data/training_food/train_images", train_images)
-  np.save("./data/training_food/train_labels", train_labels)
+  np.save(folder + "/train_images", train_images)
+  np.save(folder + "/train_labels", train_labels)
 
-  np.save("./data/training_food/test_images", test_images)
-  np.save("./data/training_food/test_labels", test_labels)
+  np.save(folder + "/test_images", test_images)
+  np.save(folder + "/test_labels", test_labels)
 
-  print("image preparation done")
-
+def get_images_folder():
+  folder = "./data/food" 
+  if not os.path.exists(folder):
+    os.makedirs(folder)
+  
+  return folder
 
 if __name__ == "__main__":
   main()

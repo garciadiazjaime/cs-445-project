@@ -5,17 +5,20 @@ import tensorflow as tf
 from tensorflow import keras
 
 from model import create_model
+from prepare import get_images_folder
 
 
 def main():
+  image_folder = get_images_folder()
+
   ############# Loading images #############
-  with open("./data/training_food/train_images.npy", "rb") as f:
+  with open(image_folder + "/train_images.npy", "rb") as f:
     train_images = np.load(f)
-  with open("./data/training_food/train_labels.npy", "rb") as f:
+  with open(image_folder + "/train_labels.npy", "rb") as f:
     train_labels = np.load(f)
-  with open("./data/training_food/test_images.npy", "rb") as f:
+  with open(image_folder + "/test_images.npy", "rb") as f:
     test_images = np.load(f)
-  with open("./data/training_food/test_labels.npy", "rb") as f:
+  with open(image_folder + "/test_labels.npy", "rb") as f:
     test_labels = np.load(f)
 
 
@@ -29,8 +32,11 @@ def main():
 
 
   ############# Save checkpoints during training #############
+  folder = "data/food/checkpoints"
+  if not os.path.exists(folder):
+    os.makedirs(folder)
 
-  checkpoint_path = "data/training_food/cp-{epoch:04d}.ckpt"
+  checkpoint_path = folder + "/cp-{epoch:04d}.ckpt"
   checkpoint_dir = os.path.dirname(checkpoint_path)
 
   batch_size = 32
@@ -45,7 +51,7 @@ def main():
   # Save the weights using the `checkpoint_path` format
   model.save_weights(checkpoint_path.format(epoch=0))
 
-  epochs = 100
+  epochs = 500
 
   # Train the model with the new callback
   model.fit(train_images, 
@@ -58,6 +64,10 @@ def main():
 
 
   ############# Save model #############
+  folder = "data/saved_model"
+  if not os.path.exists(folder):
+    os.makedirs(folder)
+
   model.save('data/saved_model/food')
 
 
