@@ -95,6 +95,33 @@
 			</li>
 		</ul>
 	</li>
+	<li>
+		<h2>Website</h2>
+		<p>
+			Last but not least a website app that does:
+		</p>
+		<ul>
+			<li>
+				<h3>a) Show recommendations</h3>
+				<p>
+					The recommendations are already curated and based on Instagram posts.
+				</p>
+			</li>
+			<li>
+				<h3>b) Classify images</h3>
+				<p>
+					This section helps to manually assign a label to an image. The train and test images set are based on these curated images.
+				</p>
+			</li>
+			<li>
+				<h3>c) Make predictions</h3>
+				<p>
+					This sections allows you to enter a public URL, unfortunately now a days not all images are public, and make a wild prediction. <br />
+					It also comes with a list of public images URL to try out.
+				</p>
+			</li>
+		</ul>
+	</li>
 </ul>
 
 <p>
