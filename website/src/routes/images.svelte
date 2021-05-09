@@ -112,9 +112,13 @@
 </div>
 
 <br />
+
+<p>
+  This view helps to manually curated the images. These images will be part of the train and test sets.
+</p>
 {#if !showRawImages}
 <p>
-  Note: This is for demostration purposes, values selected are not being saved.
+  Note: The values selected are only saved when the site is running locally, in the public site this was left for demonstration purposes.
 </p>
 {/if}
 
