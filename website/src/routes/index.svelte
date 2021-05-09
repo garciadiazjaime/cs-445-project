@@ -1,38 +1,59 @@
 <script>
-	import successkid from 'images/successkid.jpg';
+	let topics = [
+		['tacos', 'tacos'],
+	]
+	// ['drink', 'drink'],
+	// ['pizza', 'pizza'],
+	//, 'sandwich', 'seafood', 'tacos', 'dessert']
+	let selectedTopic = ''
+
+	async function clickHandler() {
+		console.log('clickHandler')
+		// showOptions = true
+		// options = []
+
+		// const { innerText: topic } = this
+		// selectedTopic = topic
+		// document.getElementById('options').scrollIntoView();
+
+		// const res = await fetch(`process.API_URL/search?category=${topic}`);
+		// options = await res.json();
+
+		// validatePosts(options)
+	}
 </script>
 
 <style>
-	h1, figure, p {
-		text-align: center;
-		margin: 0 auto;
-	}
-
-	h1 {
-		font-size: 2.8em;
-		text-transform: uppercase;
-		font-weight: 700;
-		margin: 0 0 0.5em 0;
-	}
-
-	figure {
-		margin: 0 0 1em 0;
-	}
-
-	img {
+	ul {
+		list-style-type: none;
+		padding: 0;
 		width: 100%;
-		max-width: 400px;
-		margin: 0 0 1em 0;
+		margin-top: 20px;
 	}
 
-	p {
-		margin: 1em auto;
+	.topics-list li {
+		display: inline-block;
+		width: 33%;
+		font-size: 3em;
+		border: 1px solid #EEE;
+		padding: 16px 0px;
+		text-align: center;
+		opacity: .8;
 	}
 
-	@media (min-width: 480px) {
-		h1 {
-			font-size: 4em;
+	@media (max-width: 640px) {
+		.topics-list li {
+			width: 100%;
 		}
+	}
+
+	.topics-list li:hover {
+		text-decoration: underline;
+		cursor: pointer;
+	}
+
+	.selected {
+		color: rgb(255,62,0);;
 	}
 </style>
 
@@ -40,11 +61,16 @@
 	<title>Sapper project template</title>
 </svelte:head>
 
-<h1>Great success!</h1>
+<h1>What to eat in Chicago?</h1>
 
-<figure>
-	<img alt="Success Kid" src="{successkid}">
-	<figcaption>Have fun with Sapper!</figcaption>
-</figure>
 
-<p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>
+<p>
+	#feedmechicago collects and analyzes data from Instagram about Chicago Food posts in the hope to help you find something delicious to eat in beautiful Chitown.
+</p>
+
+<h1>Food Options:</h1>
+<ul class="topics-list">
+	{#each topics as topic}
+	<li on:click={clickHandler} class:selected={selectedTopic === topic[0]}>{topic[0]}</li>
+	{/each}
+</ul>
