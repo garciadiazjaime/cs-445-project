@@ -36,12 +36,10 @@ https://www.tensorflow.org/js/tutorials/conversion/import_saved_model
 ```
 tensorflowjs_converter \
     --input_format=tf_saved_model \
-    --output_node_names='MobilenetV1/Predictions/Reshape_1' \
-    --saved_model_tags=serve \
     ./data/saved_model/food \
     ./data/web_model
 
 rm -rf ../website/static/web_model
 
-cp -r data/web_model ../website/static
+mv data/web_model ../website/static
 ```

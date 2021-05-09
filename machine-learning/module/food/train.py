@@ -51,7 +51,7 @@ def main():
   # Save the weights using the `checkpoint_path` format
   model.save_weights(checkpoint_path.format(epoch=0))
 
-  epochs = 500
+  epochs = 1000
 
   # Train the model with the new callback
   model.fit(train_images, 
