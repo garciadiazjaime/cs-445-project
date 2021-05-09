@@ -1,25 +1,37 @@
 <script>
+	export let postsByCategory = {}
+
+	let post = {}
+	let topic = ''
 	let topics = [
 		['tacos', 'tacos'],
+		['pizza', 'pizza'],
 	]
-	// ['drink', 'drink'],
-	// ['pizza', 'pizza'],
-	//, 'sandwich', 'seafood', 'tacos', 'dessert']
+	const indexes = {}
+
 	let selectedTopic = ''
 
-	async function clickHandler() {
-		console.log('clickHandler')
-		// showOptions = true
-		// options = []
+	async function clickHandler(category) {
+		topic = category
 
-		// const { innerText: topic } = this
-		// selectedTopic = topic
-		// document.getElementById('options').scrollIntoView();
+		if (indexes[category] === undefined) {
+			indexes[category] = -1
+		}
 
-		// const res = await fetch(`process.API_URL/search?category=${topic}`);
-		// options = await res.json();
+		indexes[category] = (indexes[category] + 1) % postsByCategory[category].length
 
-		// validatePosts(options)
+		post = postsByCategory[category][indexes[category]]
+	}
+</script>
+
+<script context="module">
+	export async function preload() {
+		let response = await this.fetch('./data/posts.json')
+		const postsByCategory = await response.json()
+
+		return {
+			postsByCategory,
+		}
 	}
 </script>
 
@@ -55,22 +67,37 @@
 	.selected {
 		color: rgb(255,62,0);;
 	}
+
+	small {
+		color: gray;
+	}
 </style>
 
 <svelte:head>
 	<title>Sapper project template</title>
 </svelte:head>
 
-<h1>What to eat in Chicago?</h1>
+<h1>To Taco or To Pizza <small>that's the question</small></h1>
 
 
 <p>
-	#feedmechicago collects and analyzes data from Instagram about Chicago Food posts in the hope to help you find something delicious to eat in beautiful Chitown.
+	This tool collects and analyzes data from Instagram about Chicago Food posts in the hope to help you find something delicious to eat in beautiful Chitown.
 </p>
 
-<h1>Food Options:</h1>
+<p>
+	The recommendations presented here are already curated, if you want more wild guesses go to the <a href="/guess">wild west</a> section.
+</p>
+
 <ul class="topics-list">
 	{#each topics as topic}
-	<li on:click={clickHandler} class:selected={selectedTopic === topic[0]}>{topic[0]}</li>
+	<li on:click={() => clickHandler(topic[0])} class:selected={selectedTopic === topic[0]}>{topic[0]}</li>
 	{/each}
 </ul>
+
+{#if topic}
+<div class="post">
+	<a href={post.permalink} target="_blank">
+		<img src={`/images/${topic}/${post.id}.jpg`} alt="">
+	</a>
+</div>
+{/if}

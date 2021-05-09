@@ -4,10 +4,26 @@
   let tf = null
   let loadGraphModel = null
   let model = null
+  let msg = ''
   const result = {}
 
-  // let guessURL = 'https://s3-media0.fl.yelpcdn.com/bphoto/okTCSmFEVC6Tr0N10RGqaA/l.jpg'
-  let guessURL = 'https://cdn.vox-cdn.com/thumbor/dhIGCe8OGUK2YslVIcxYaW-QILQ=/0x0:1280x853/1200x900/filters:focal(538x325:742x529)/cdn.vox-cdn.com/uploads/chorus_image/image/63729432/taqueria_el_mezquite.0.jpg'
+  let guessURL = ''
+
+  let cases = [
+    // pizza
+    'https://s3-media0.fl.yelpcdn.com/bphoto/okTCSmFEVC6Tr0N10RGqaA/l.jpg',
+    'https://s3-media0.fl.yelpcdn.com/bphoto/olCiohzqhS0V9V6sISp-2A/ls.jpg',
+    'https://s3-media0.fl.yelpcdn.com/bphoto/pgbTzTYe0D-keQE58YdNbQ/ls.jpg',
+    'https://s3-media0.fl.yelpcdn.com/bphoto/PZEoHKfHbEhAGl7tYZ0XcA/ls.jpg',
+
+
+    // tacos
+    'https://i.insider.com/5a7dd9e1aee63c76008b4640?width=750&format=jpeg&auto=webp',
+    'https://s3-media0.fl.yelpcdn.com/bphoto/VLj4WylvSfoUB9ove5QoNA/ls.jpg',
+    'https://s3-media0.fl.yelpcdn.com/bphoto/_XWZGG0A-nB_26YE5Px_-Q/l.jpg',
+    'https://s3-media0.fl.yelpcdn.com/bphoto/68y9BV2b9qDsLUMZpjdHgw/l.jpg',
+    'https://hoodline.imgix.net/uploads/story/image/890217/o.jpg?auto=format',
+  ]
   
   let imageURL = ''
   const categories = ['tacos', 'pizza']
@@ -15,28 +31,33 @@
   const MODEL_URL = 'web_model/model.json';
 
 	onMount(async () => {
-    console.log('onMount')
     tf = (await import('@tensorflow/tfjs'));
     loadGraphModel = (await import('@tensorflow/tfjs-converter')).loadGraphModel;
 
-    console.log('loadGraphModel')
 		model = await loadGraphModel(MODEL_URL);
 
-    console.log('test')
     const zeros = tf.zeros([1, 224, 224, 3]);
     model.predict(zeros).print();
 	})
 
-  async function resizeImage(img) {
-    const canvas = document.getElementById("canvas");
+  function resizeImage(img) {
+    const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
-    
-    const oc = document.createElement('canvas'),
-        octx = oc.getContext('2d');
 
-    octx.drawImage(img, 0, 0, 224, 224);
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-    ctx.drawImage(oc, 0, 0, 224, 224, 0, 0, canvas.width, canvas.height);
+
+    const scaledCanvas = document.createElement('canvas');
+    scaledCanvas.width = 224;
+    scaledCanvas.height = 224;
+
+    scaledCanvas
+      .getContext('2d')
+      .drawImage(canvas, 0, 0, scaledCanvas.width, scaledCanvas.height);
+
+    return scaledCanvas
   }
 
   async function setPredictedCategory(predictions) {
@@ -57,39 +78,92 @@
   }
   
   function guessHandler(event) {
+    if (!guessURL) {
+      msg = "please paste an image URL in the box"
+      return
+    }
+
+    msg = "...loading"
     imageURL = guessURL
 
-    const image = new Image(); // Image constructor
+    const image = new Image();
     image.crossOrigin = "Anonymous";
     image.onload = async function(){
-      resizeImage(image)      
+      msg = ""
+      const canvas = resizeImage(image)
 
-      const canvas = document.getElementById("canvas");
-      const item = tf.browser.fromPixels(canvas)
+      const imagePixels = tf.browser.fromPixels(canvas)
 
-      let item2 = item.reshape([1, 224, 224, 3])
-      item2 = tf.div(item2, 255.0)
+      let imageReshaped = imagePixels.reshape([1, 224, 224, 3])
+      imageReshaped = tf.div(imageReshaped, 255.0)
       
-      let predictions = model.predict(item2)
+      const predictions = model.predict(imageReshaped)
       predictions.print()
       
       await setPredictedCategory(predictions)
     };
+    image.onerror = function () {
+      msg = "Sorry couldn't download that image (maybe because of CORS), try using images from yelp"
+    }
     image.src = imageURL
+  }
+
+  function caseClickHanddler(index) {
+    guessURL = cases[index]
+    guessHandler()
   }
 </script>
 
 <style>
   input, button {
     font-size: 48px;
+    width: 100%;
+    margin: 20px 0;
   }
 
   img {
-    width: auto;
     height: 224px;
+    width: auto;
+  }
+
+  .image {
+    height: 224px;
+    width: 224px;
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  .image:hover {
+    cursor: pointer;
+  }
+
+  .image-wrapper {
+    height: 224px;
+  }
+
+  .msg {
+    color: darksalmon;
+  }
+
+  div, p {
+    font-size: 24px;
+  }
+  
+  .cases {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 15px;
+    row-gap: 15px;
   }
 </style>
 
+<h1>Image Classifier [Level: Toddler 👶]</h1>
+<p>Paste either a Pizza or Taco Image URL and with some luck this tool will tell you what it is 🤞.</p>
+<p>
+  Note: Most of the images are not public anymore 😞, 
+  try one from <a href="https://www.google.com/search?q=yelp+taco&tbm=isch" target="_blank">Yelp Taco</a> or 
+  <a href="https://www.google.com/search?q=yelp+pizza&tbm=isch" target="_blank">Yelp Pizza</a> instead 😎.
+</p>
 
 <input type="text" bind:value={guessURL}>
 <br />
@@ -101,11 +175,21 @@
   Category: <strong>{result.category || ''}</strong> <br />
   Confidence: {result.confidence || ''}
 </div>
+<p class="msg">
+  {msg}
+</p>
 
-{#if imageURL}
-<div>
-  <img src={imageURL} alt="" id="guess-image" crossorigin='anonymous'>
-  <canvas id="canvas" width=224 height=224></canvas>
+<div class="image-wrapper">
+  {#if imageURL}
+    <img src={imageURL} alt="" crossorigin='anonymous'>
+  {/if}
 </div>
-{/if}
+
+<br>
+<h2>You can use one of these images, just click on it.</h2>
+<div class="cases">
+  {#each cases as imageCaseURL, index}
+    <div class="image" on:click={() => caseClickHanddler(index)} style={`background-image: url(${imageCaseURL})`}></div>
+  {/each}
+</div>
 

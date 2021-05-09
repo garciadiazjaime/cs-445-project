@@ -52,7 +52,7 @@
 	<ul>
 		<li><a aria-current="{segment === undefined ? 'page' : undefined}" href=".">home</a></li>
 		<li><a aria-current="{segment === 'about' ? 'page' : undefined}" href="about">about</a></li>
-		<li><a aria-current="{segment === 'images' ? 'page' : undefined}" href="images">images</a></li>
-		<li><a aria-current="{segment === 'guess' ? 'page' : undefined}" href="guess">guess</a></li>
+		<li><a aria-current="{segment === 'images' ? 'page' : undefined}" href="images">classify images</a></li>
+		<li><a aria-current="{segment === 'guess' ? 'page' : undefined}" href="guess">wild west</a></li>
 	</ul>
 </nav>
