@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./main.js",
     "dev": "nodemon ./main.js",
-    "images": "node ./module/image/etl.js"
+    "images": "node ./module/image/etl.js",
+    "posts": "node website.js"
   },
   "keywords": [],
   "author": "",

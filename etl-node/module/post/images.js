@@ -7,8 +7,6 @@ const fetch = require('node-fetch');
 const debug = require('debug')('app:image')
 const streamPipeline = promisify(require('stream').pipeline);
 
-const { Post } = require('./model')
-
 function sleep(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
