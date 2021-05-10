@@ -43,3 +43,8 @@ rm -rf ../website/static/web_model
 
 mv data/web_model ../website/static
 ```
+
+
+## Zip folder
+
+zip -r jaimeg4_project.zip . -x '*.git*' -x '*mp5*' -x '*.vscode*' -x '*.DS_Store*' -x '*node_modules*' -x '*website/static/images*' -x '*website/__sapper__*' -x '*website/static/test*' -x '*machine-learning/venv*' -x '*__pycache__*' -x '*machine-learning/data*' -x '*website/static/web_model*'
