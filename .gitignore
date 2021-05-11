@@ -16,3 +16,4 @@ etl-node/node_modules
 __pycache__
 machine-learning/data/
 website/static/images
+website/static/web_model/
