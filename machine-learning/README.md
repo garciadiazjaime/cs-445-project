@@ -30,6 +30,12 @@ https://www.tensorflow.org/tutorials/images/classification
 https://www.tensorflow.org/js/tutorials/conversion/import_saved_model
 
 
+## Train model
+```
+python module/food/prepare.py
+
+python module/food/train.py
+```
 
 ## TensorFlow JS
 
