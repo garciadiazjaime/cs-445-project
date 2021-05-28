@@ -28,7 +28,6 @@ export default {
 				values:{
 					'process.browser': true,
 					'process.env.NODE_ENV': JSON.stringify(mode),
-					'process.env.show_raw_images': JSON.stringify(true)
 				},
 			}),
 			svelte({
@@ -82,7 +81,6 @@ export default {
 				values:{
 					'process.browser': false,
 					'process.env.NODE_ENV': JSON.stringify(mode),
-					'process.env.show_raw_images': JSON.stringify(true)
 				},
 			}),
 			svelte({
@@ -118,7 +116,6 @@ export default {
 				values:{
 					'process.browser': true,
 					'process.env.NODE_ENV': JSON.stringify(mode),
-					'process.env.show_raw_images': JSON.stringify(true)
 				},
 			}),
 			commonjs(),

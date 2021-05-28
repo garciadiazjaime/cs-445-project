@@ -18,7 +18,7 @@ async function downloadImage(mediaUrl, imageName, counter) {
     return null
   }
 
-  debug(mediaUrl)
+  debug(`${counter.downloads}:${mediaUrl}`)
   await sleep(1000)
   counter.downloads += 1
 

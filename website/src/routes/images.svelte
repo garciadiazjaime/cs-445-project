@@ -1,29 +1,17 @@
 <script>
-  import { onMount } from 'svelte';
-
-  export let rawImages
+  import { onMount } from 'svelte'
 
   let images = []
   const categories = [ 'sandwich', 'pizza', 'seafood', 'tacos', 'drink', 'dessert', 'none', 'delete']
   let index = 0
   const url = 'http://10.0.0.113:3030'
-  const showRawImages = process.env.show_raw_images
 
-  onMount(async () => {
-    if (!showRawImages) {
-      images = rawImages
-      return 
-    }
-  
+  onMount(async () => {  
 		const res = await fetch(`${url}/images`);
     images = await res.json()
 	});
 
   async function labelImage(category, image) {
-    if (!showRawImages) {
-      return 
-    }
-
     const payload = {
       category,
     }
@@ -48,17 +36,6 @@
       location.reload()
     }
   }
-</script>
-
-<script context="module">
-	export async function preload() {
-		let response = await this.fetch('./data/rawImages.json')
-		const rawImages = await response.json()
-
-		return {
-			rawImages,
-		}
-	}
 </script>
 
 <style>
@@ -110,16 +87,3 @@
   loading...
   {/if}
 </div>
-
-<br />
-
-<p>
-  This view helps to manually curated the images. These images will be part of the train and test sets.
-</p>
-{#if !showRawImages}
-<p>
-  Note: The values selected are only saved when the site is running locally, in the public site this was left for demonstration purposes.
-</p>
-{/if}
-
-
