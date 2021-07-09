@@ -18,12 +18,22 @@ const PostSchema = new Schema({
   location: Object,
 
   label: String,
+  isFood: Boolean,
+}, {
+  timestamps: true,
+});
+
+const PostLabelSchema = new Schema({
+  postId: String,
+  labels: Array,
 }, {
   timestamps: true,
 });
 
 const Post = mongoose.model('post', PostSchema);
+const PostLabel = mongoose.model('postlabel', PostLabelSchema);
 
 module.exports = {
   Post,
+  PostLabel,
 };

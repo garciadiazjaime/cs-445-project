@@ -8,12 +8,14 @@
     "start": "node ./main.js",
     "dev": "nodemon ./main.js",
     "images": "node ./module/image/etl.js",
-    "posts": "node website.js"
+    "posts": "node website.js",
+    "labels": "node module/labels/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-rekognition": "^3.20.0",
     "async": "^3.2.0",
     "body-parser": "^1.19.0",
     "convict": "^6.1.0",

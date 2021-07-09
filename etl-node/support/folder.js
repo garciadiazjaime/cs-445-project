@@ -5,9 +5,10 @@ const readdir = util.promisify(fs.readdir);
 const rename = util.promisify(fs.rename);
 
 const directory = '../website/static';
+const postsPath = `${directory}/images/posts`
 
 async function getFileList() {
-  const response = await readdir(`${directory}/images/posts`)
+  const response = await readdir(postsPath)
 
   return response.slice(0, 500).filter(file => file.includes('jpg'))
 }
@@ -26,6 +27,7 @@ async function moveFile(category, image) {
 }
 
 module.exports = {
+  postsPath,
   getFileList,
   moveFile,
   getImagesFromFolder,
