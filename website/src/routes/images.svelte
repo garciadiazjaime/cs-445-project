@@ -60,6 +60,7 @@
   img {
     width: 100%;
     height: auto;
+    height: 320px;
   }
 
   @media (max-width: 480px) {

@@ -1,11 +1,13 @@
 import os
+import cv2
 import numpy as np
 import tensorflow as tf
-# import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 from model import create_model
 from prepare import get_images_folder, get_categories
 
+img_size = 224
 
 def latest(test_images, test_labels, train_folder):
   checkpoint_path = train_folder + "/checkpoints/cp-{epoch:04d}.ckpt"
@@ -44,9 +46,7 @@ def restore_model(test_images, test_labels):
   # Evaluate the restored model
   loss, acc = model.evaluate(test_images, test_labels, verbose=2)
   print("----- RESTORED MODEL -----")
-  print("Restored model, accuracy: {:5.2f}%".format(100 * acc))
-
-  print(model.predict(test_images).shape)
+  print("Restored model, accuracy: {:5.2f}%\n".format(100 * acc))
 
   return model
 
@@ -67,7 +67,6 @@ def predict(model):
 
   path = tf.keras.utils.get_file(name, origin=url)
 
-  img_size = 224
   img = tf.keras.preprocessing.image.load_img(
     path, target_size=(img_size, img_size)
   )
@@ -77,19 +76,58 @@ def predict(model):
   # plt.show()
 
   img_array = tf.keras.preprocessing.image.img_to_array(img)
-  img_array = tf.expand_dims(img_array, 0) # Create a batch
-  print("shape", img_array.shape)
+  img_array = tf.expand_dims(img_array, 0) / 255.0 # Create a batch
 
   predictions = model.predict(img_array)
   print("----- PREDICTIONS -----")
-  print("predictions", predictions)
   score = tf.nn.softmax(predictions[0])
 
   class_names = get_categories()
   print(
     "This image most likely belongs to {} with a {:.2f} percent confidence."
     .format(class_names[np.argmax(score)], 100 * np.max(score))
-)
+  )
+
+
+def predict_image(model):
+  exclude = ['.DS_Store']
+  images_path = '../website/static/images/posts'
+  entries = os.listdir(images_path)
+  images = []
+
+  for (i, entry) in enumerate(entries):
+    if entry not in exclude:
+      img = tf.keras.preprocessing.image.load_img(images_path + '/' + entry, target_size=(img_size, img_size))
+      img_array = tf.keras.preprocessing.image.img_to_array(img)
+      img_array = tf.expand_dims(img_array, 0) / 255.0 # Create a batch
+
+      predictions = model.predict(img_array)
+      class_names = get_categories()
+
+      score = tf.nn.softmax(predictions[0])
+      label = class_names[np.argmax(score)]
+      confidence = 100 * np.max(score)
+
+      images.append([
+        img_array[0],
+        label,
+        confidence
+      ])
+
+  sorted_images = sorted(images, key=lambda x: -x[2])
+
+  for (i, item) in enumerate(sorted_images[:30]):
+      print("----- PREDICTION:", i + 1)
+
+      [img_array, label, confidence] = item
+      
+      title = "{} with a {:.2f} % confidence.".format(label, confidence)
+      print(title)
+
+      plt.figure()
+      plt.imshow(img_array)
+      plt.title(title)
+      plt.show()
 
 
 def main():
@@ -100,11 +138,12 @@ def main():
   with open(train_folder + "/test_labels.npy", "rb") as f:
     test_labels = np.load(f)
   
-  model = latest(test_images, test_labels, train_folder)
-  predict(model)
+  # model = latest(test_images, test_labels, train_folder)
+  # predict(model)
 
   model = restore_model(test_images, test_labels)
-  predict(model)
+  predict_image(model)
+
 
 
 if __name__ == "__main__":
