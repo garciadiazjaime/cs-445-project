@@ -18,7 +18,6 @@ const PostSchema = new Schema({
   location: Object,
 
   label: String,
-  isFood: Boolean,
 }, {
   timestamps: true,
 });
